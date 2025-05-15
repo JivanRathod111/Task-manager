@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #6E6AF0;
+  --color-secondary: #ecc94b;
+}
+
+
+body{
+  margin: 0;
+  padding: 0;
+  background-color:#FFFFFF ;
+  
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.625rem 1rem; /* py-2.5 px-4 */
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 0.5rem; /* rounded-lg */
+  font-size: 0.875rem; /* text-sm */
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5); /* ring-2 ring-indigo-400 */
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #6366f1; /* indigo-500 */
+}
