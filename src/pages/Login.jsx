@@ -47,7 +47,7 @@ export default function LoginForm() {
         />
 
         
-        <div className="w-[390px] px-10 py-4 rounded-[16px] flex flex-col justify-center gap-2 bg-white">
+        <div className="w-[390px] px-10 py-4 rounded-[16px] flex flex-col justify-center gap-2 bg-white ">
           <h2 className="text-xl font-semibold text-gray-900">Sign in</h2>
           <p className="text-xs text-gray-500">Login to your account to continue.</p>
 

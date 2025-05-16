@@ -104,7 +104,9 @@ const Dashboard = () => {
           <div className="w-16 pt-6">
             <SidebarIcons />
           </div>
-          <DashboardPanel />
+          <div className="hidden md:block">
+  <DashboardPanel />
+</div>
         </div>
       </aside>
 

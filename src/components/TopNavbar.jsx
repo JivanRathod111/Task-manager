@@ -23,7 +23,7 @@ const TopNavbar = () => {
   };
 
   return (
-    <div className="flex justify-between items-center px-6 py-4 bg-white shadow-sm m-1 rounded-lg relative">
+    <div className="flex justify-between items-center p-3 bg-white shadow-sm m-1 rounded-lg relative">
    
       <div className="flex items-center bg-gray-100 px-4 py-2 rounded-lg w-64">
         <FiSearch className="text-gray-400 mr-2" />
@@ -38,7 +38,11 @@ const TopNavbar = () => {
       <div className="flex items-center gap-6">
         <FiMail className="text-gray-500 text-xl cursor-pointer" />
         <FiBell className="text-gray-500 text-xl cursor-pointer" />
-
+        <button
+                onClick={handleLogout}
+              >
+                <FiLogOut className="text-base text-gray-500 text-xl cursor-pointer" />
+              </button>
         <div className="relative" ref={dropdownRef}>
           <div
             className="flex items-center gap-2 cursor-pointer"
@@ -54,18 +58,7 @@ const TopNavbar = () => {
           </div>
 
    
-          {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-b-50 hover:text-red-700 transition-all bg-violet-100 text-violet-600
-                text-gray-500 hover:text-violet-600"
-              >
-                <FiLogOut className="text-base" />
-                Logout
-              </button>
-            </div>
-          )}
+       
         </div>
       </div>
     </div>
