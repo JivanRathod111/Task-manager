@@ -1,14 +1,22 @@
-import React from 'react';
-import { useDraggable } from '@dnd-kit/core';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const TaskCard = ({ task }) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: task.id,
-  });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id });
 
   const style = {
-    transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
+    transform: CSS.Transform.toString(transform),
+    transition,
     opacity: isDragging ? 0.5 : 1,
+    touchAction: "none", 
   };
 
   return (
@@ -17,7 +25,7 @@ const TaskCard = ({ task }) => {
       {...listeners}
       {...attributes}
       style={style}
-      className="bg-white rounded-sm shadow p-4"
+      className="bg-white rounded-sm shadow p-4 select-none touch-none"
     >
       <div className="flex items-center gap-2 mb-2">
         <img
@@ -31,9 +39,9 @@ const TaskCard = ({ task }) => {
       <p className="text-sm text-gray-500">{task.description}</p>
       <span
         className={`inline-block mt-3 px-3 py-1 text-xs rounded-full ${
-          task.priority === 'Must'
-            ? 'bg-red-100 text-red-500'
-            : 'bg-green-100 text-green-500'
+          task.priority === "Must"
+            ? "bg-red-100 text-red-500"
+            : "bg-green-100 text-green-500"
         }`}
       >
         {task.priority}

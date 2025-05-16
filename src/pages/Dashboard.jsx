@@ -1,42 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   DndContext,
   closestCenter,
   DragOverlay,
-} from '@dnd-kit/core';
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import SidebarIcons from '../components/SidebarIcons';
-import TopNavbar from '../components/TopNavbar';
-import BoardNavbar from '../components/BoardNavbar';
-import DashboardPanel from '../components/DashboardPanel';
-import TaskColumn from '../components/TaskColumn';
-import TaskFormModal from '../components/TaskFormModal';
+} from "@dnd-kit/sortable";
+import SidebarIcons from "../components/SidebarIcons";
+import TopNavbar from "../components/TopNavbar";
+import BoardNavbar from "../components/BoardNavbar";
+import DashboardPanel from "../components/DashboardPanel";
+import TaskColumn from "../components/TaskColumn";
+import TaskFormModal from "../components/TaskFormModal";
+import TaskCard from "../components/TaskCard";
+import supabase from "../utils/supabase";
 
-import TaskCard from '../components/TaskCard'; 
-import supabase from '../utils/supabase';
-
-const columns = ['New', 'In progress', 'Review', 'Done'];
+const columns = ["New", "In progress", "Review", "Done"];
 
 const Dashboard = () => {
   const [columnsData, setColumnsData] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [activeTask, setActiveTask] = useState(null);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150,
+        tolerance: 5,
+      },
+    })
+  );
+
   const fetchTasks = async () => {
-    const { data, error } = await supabase.from('tasks').select('*');
+    const { data, error } = await supabase.from("tasks").select("*");
     if (error) {
-      console.error('Error fetching tasks:', error);
+      console.error("Error fetching tasks:", error);
       return;
     }
 
     const grouped = {};
     columns.forEach((col) => (grouped[col] = []));
     data.forEach((task) => {
-      const col = task.status || 'New';
+      const col = task.status || "New";
       if (!grouped[col]) grouped[col] = [];
       grouped[col].push(task);
     });
@@ -61,16 +73,16 @@ const Dashboard = () => {
   const handleDragEnd = async ({ active, over }) => {
     setActiveTask(null);
     if (!over) return;
-  
+
     const activeId = active.id;
     const overId = over.id;
-  
+
     let sourceCol, targetCol;
     for (const col of columns) {
       if (columnsData[col].some((t) => t.id === activeId)) sourceCol = col;
     }
 
-    if (columns.some(col => columnsData[col].some(t => t.id === overId))) {
+    if (columns.some((col) => columnsData[col].some((t) => t.id === overId))) {
       for (const col of columns) {
         if (columnsData[col].some((t) => t.id === overId)) {
           targetCol = col;
@@ -78,24 +90,27 @@ const Dashboard = () => {
         }
       }
     } else if (columns.includes(overId)) {
-
       targetCol = overId;
     }
-  
+
     if (!sourceCol || !targetCol || sourceCol === targetCol) return;
-  
-    const taskIndex = columnsData[sourceCol].findIndex((t) => t.id === activeId);
+
+    const taskIndex = columnsData[sourceCol].findIndex(
+      (t) => t.id === activeId
+    );
     const task = columnsData[sourceCol][taskIndex];
     const updatedTask = { ...task, status: targetCol };
-  
+
     const newColumns = { ...columnsData };
     newColumns[sourceCol].splice(taskIndex, 1);
     newColumns[targetCol] = [updatedTask, ...newColumns[targetCol]];
     setColumnsData(newColumns);
-  
-    await supabase.from('tasks').update({ status: targetCol }).eq('id', task.id);
+
+    await supabase
+      .from("tasks")
+      .update({ status: targetCol })
+      .eq("id", task.id);
   };
-  
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-gray-100">
@@ -105,8 +120,8 @@ const Dashboard = () => {
             <SidebarIcons />
           </div>
           <div className="hidden md:block">
-  <DashboardPanel />
-</div>
+            <DashboardPanel />
+          </div>
         </div>
       </aside>
 
@@ -116,30 +131,28 @@ const Dashboard = () => {
 
         <DndContext
           collisionDetection={closestCenter}
+          sensors={sensors}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <div className="flex gap-6 px-6 py-4 overflow-x-auto">
             {columns.map((col) => (
-         <SortableContext
-         key={col}
-         items={(columnsData[col] || []).map((t) => t.id)}
-         strategy={verticalListSortingStrategy}
-       >
-         <TaskColumn
-           title={col}
-           tasks={columnsData[col] || []}
-           onAdd={() => setOpenModal(true)}
-         />
-       </SortableContext>
-       
+              <SortableContext
+                key={col}
+                items={(columnsData[col] || []).map((t) => t.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <TaskColumn
+                  title={col}
+                  tasks={columnsData[col] || []}
+                  onAdd={() => setOpenModal(true)}
+                />
+              </SortableContext>
             ))}
           </div>
 
-          <DragOverlay dropAnimation={{ duration: 250, easing: 'ease-in-out' }}>
-            {activeTask ? (
-              <TaskCard task={activeTask} dragPreview />
-            ) : null}
+          <DragOverlay dropAnimation={{ duration: 250, easing: "ease-in-out" }}>
+            {activeTask ? <TaskCard task={activeTask} dragPreview /> : null}
           </DragOverlay>
         </DndContext>
 

@@ -29,14 +29,12 @@ export default function SignUpForm() {
   const handleSubmit = (values) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-
     const existingUser = users.find((user) => user.email === values.email);
     if (existingUser) {
       alert("User with this email already exists.");
       return;
     }
 
-  
     const newUser = {
       name: values.name,
       email: values.email,
@@ -54,7 +52,9 @@ export default function SignUpForm() {
       <div className="flex w-full h-full justify-end md:p-4">
         <div className="w-[390px] px-10 py-4 rounded-[16px] flex flex-col justify-center gap-2 bg-white">
           <h2 className="text-xl font-semibold text-gray-900">Sign up</h2>
-          <p className="text-xs text-gray-500">Create your account to continue.</p>
+          <p className="text-xs text-gray-500">
+            Create your account to continue.
+          </p>
 
           <Formik
             initialValues={initialValues}
@@ -63,9 +63,11 @@ export default function SignUpForm() {
           >
             {() => (
               <Form className="mt-3 space-y-3">
-              
                 <div>
-                  <label htmlFor="name" className="block text-xs font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="name"
+                    className="block text-xs font-medium text-gray-700 mb-1"
+                  >
                     Full Name
                   </label>
                   <Field
@@ -75,13 +77,19 @@ export default function SignUpForm() {
                     placeholder="John Doe"
                   />
                   <div className="min-h-[18px]">
-                    <ErrorMessage name="name" component="div" className="text-xs text-red-500 mt-0.5" />
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="text-xs text-red-500 mt-0.5"
+                    />
                   </div>
                 </div>
 
-          
                 <div>
-                  <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="email"
+                    className="block text-xs font-medium text-gray-700 mb-1"
+                  >
                     Email
                   </label>
                   <Field
@@ -91,13 +99,19 @@ export default function SignUpForm() {
                     placeholder="you@example.com"
                   />
                   <div className="min-h-[18px]">
-                    <ErrorMessage name="email" component="div" className="text-xs text-red-500 mt-0.5" />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="text-xs text-red-500 mt-0.5"
+                    />
                   </div>
                 </div>
 
-         
                 <div>
-                  <label htmlFor="password" className="block text-xs font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="password"
+                    className="block text-xs font-medium text-gray-700 mb-1"
+                  >
                     Password
                   </label>
                   <div className="relative">
@@ -116,13 +130,19 @@ export default function SignUpForm() {
                     </button>
                   </div>
                   <div className="min-h-[18px]">
-                    <ErrorMessage name="password" component="div" className="text-xs text-red-500 mt-0.5" />
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="text-xs text-red-500 mt-0.5"
+                    />
                   </div>
                 </div>
 
-             
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-xs font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block text-xs font-medium text-gray-700 mb-1"
+                  >
                     Confirm Password
                   </label>
                   <div className="relative">
@@ -135,13 +155,23 @@ export default function SignUpForm() {
                     <button
                       type="button"
                       className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                     >
-                      {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      {showConfirmPassword ? (
+                        <EyeOff size={16} />
+                      ) : (
+                        <Eye size={16} />
+                      )}
                     </button>
                   </div>
                   <div className="min-h-[18px]">
-                    <ErrorMessage name="confirmPassword" component="div" className="text-xs text-red-500 mt-0.5" />
+                    <ErrorMessage
+                      name="confirmPassword"
+                      component="div"
+                      className="text-xs text-red-500 mt-0.5"
+                    />
                   </div>
                 </div>
 
@@ -154,7 +184,10 @@ export default function SignUpForm() {
 
                 <p className="text-xs text-center text-gray-600">
                   Already have an account?{" "}
-                  <a href="/" className="text-indigo-600 font-medium hover:underline">
+                  <a
+                    href="/"
+                    className="text-indigo-600 font-medium hover:underline"
+                  >
                     Sign in
                   </a>
                 </p>
@@ -163,7 +196,6 @@ export default function SignUpForm() {
           </Formik>
         </div>
 
-        
         <div
           className="hidden md:block w-[689px] rounded-[10px] bg-cover bg-center ml-[40px]"
           style={{ backgroundImage: `url(${bgImage})` }}

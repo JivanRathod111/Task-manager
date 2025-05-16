@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import supabase from '../utils/supabase';
-
 
 const priorities = ['Must', 'High', 'Medium', 'Tiny'];
 const statuses = ['New', 'In progress', 'Review', 'Done'];
@@ -12,17 +11,31 @@ const TaskFormModal = ({ onClose, onTaskCreated }) => {
   const [status, setStatus] = useState('New');
   const [loading, setLoading] = useState(false);
 
+  const modalRef = useRef();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const { error } = await supabase.from('tasks').insert([
-      {
-        name,
-        description,
-        priority,
-        status,
-      },
+      { name, description, priority, status },
     ]);
 
     setLoading(false);
@@ -36,67 +49,89 @@ const TaskFormModal = ({ onClose, onTaskCreated }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-xl w-[400px]">
-        <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4 py-6">
+      <div
+        ref={modalRef}
+        className="w-full max-w-sm bg-white rounded-[16px] px-6 py-6 shadow-xl"
+      >
+        <h2 className="text-base font-semibold text-gray-900">Add New Task</h2>
+        <p className="text-xs text-gray-500 mb-4">Fill in the task details below.</p>
+
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Title</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">
+              Title
+            </label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-violet-500"
+              placeholder="Task name"
+              className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">
+              Description
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-violet-500"
+              placeholder="Brief description"
               rows={3}
+              className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-          <div className="flex gap-4">
+
+          <div className="flex gap-3">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700">Priority</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                Priority
+              </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-violet-500"
+                className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 {priorities.map((p) => (
-                  <option key={p} value={p}>{p}</option>
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
                 ))}
               </select>
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700">Status</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                Status
+              </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-violet-500"
+                className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 {statuses.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
-          <div className="flex justify-end gap-2">
+
+          <div className="flex justify-end gap-2 pt-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded border border-gray-300 text-gray-700"
+              className="px-4 py-2 text-xs border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 rounded bg-violet-500 text-white hover:bg-violet-600"
+              className="px-4 py-2 text-xs font-medium bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg disabled:opacity-50"
             >
               {loading ? 'Creating...' : 'Create Task'}
             </button>
@@ -108,5 +143,3 @@ const TaskFormModal = ({ onClose, onTaskCreated }) => {
 };
 
 export default TaskFormModal;
-
-
