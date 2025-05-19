@@ -39,7 +39,7 @@ const BoardNavbar = () => {
             />
           </div>
           <div className="flex flex-col">
-            <div className="w-[207px] sm:w-[280px] md:w-[30em] h-2 bg-gray-200 rounded-full">
+            <div className="w-[180px] sm:w-[250px] md:w-[30em] h-2 bg-gray-200 rounded-full">
               <div
                 className="h-full bg-indigo-500 rounded-full"
                 style={{ width: "68%" }}

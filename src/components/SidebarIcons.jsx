@@ -27,10 +27,7 @@ const SidebarIcons = () => {
     <>
    
       <div
-        className={`fixed top-0 left-0 h-screen w-[65px] z-40 bg-white border-r flex flex-col justify-between items-center py-3 transition-transform duration-300 border-white
-        ${
-          isMobileOpen ? "translate-x-0" : "-translate-x-full"
-        } sm:translate-x-0`}
+        className={`fixed top-0 left-0 h-screen w-[65px] z-40 bg-white border-r flex flex-col justify-between items-center py-3 transition-transform duration-300 border-white  `}
       >
         
         <div className="flex flex-col items-center gap-3">
@@ -66,14 +63,6 @@ const SidebarIcons = () => {
           />
         </div>
       </div>
-
-   
-      <button
-        className="sm:hidden fixed top-3 left-3 z-50 bg-white p-2 rounded-full shadow-md border"
-        onClick={() => setIsMobileOpen((prev) => !prev)}
-      >
-        {isMobileOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-      </button>
     </>
   );
 };
